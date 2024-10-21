@@ -9,7 +9,7 @@ import verifyId from './middlewares/verifyID';
 import authRoute from './routes/auth';
 import notesRoute from './routes/notes';
 import promoteRoute from './routes/promote';
-import CustomError from './utils/customError';
+import CustomError from './types/customError';
 import errorHandler from './middlewares/errorHandler';
 
 dotenv.config();

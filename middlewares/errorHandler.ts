@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import path from 'path';
-import CustomError from '../utils/customError';
+import CustomError from '../types/customError';
 const errorHandler = (error: CustomError, req: Request, res: Response, next: NextFunction) => { 
     const statusCode = error.statusCode || 500; 
     const message = error.message || 'Internal Server Error';

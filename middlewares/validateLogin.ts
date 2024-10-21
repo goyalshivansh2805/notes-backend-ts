@@ -1,6 +1,6 @@
 import {Request,Response,NextFunction} from "express";
 import loginValidator from "../validators/login";
-import CustomError from "../utils/customError";
+import CustomError from "../types/customError";
 
 const validateLogin = (req:Request,res:Response,next:NextFunction) => {
     const {error} = loginValidator.validate(req.body,{abortEarly:false});
