@@ -4,6 +4,7 @@ import User from '../models/User';
 import CustomRequest from '../types/customRequest';
 
 const verifyId = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    console.log("verifyId middleware : ", req.cookies);
     const sessionId = req.cookies?.sessionId;
     if (!sessionId) {
         res.status(401).json({success:false, message: "Unauthorized: No Session ID found" });
