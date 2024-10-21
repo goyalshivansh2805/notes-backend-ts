@@ -1,25 +1,29 @@
-import { Request, Response } from 'express';
+import { Request, Response ,NextFunction} from 'express';
 import bcrypt from 'bcrypt';
 import User from '../../models/User';
 import { v4 as uuidv4 } from 'uuid';
 import { createSession, getSession, deleteSession } from '../../service/auth';
+import { CustomError } from '../../types/express';
 
-const handleLogin = async (req: Request, res: Response) => {
+const handleLogin = async (req: Request, res: Response,next:NextFunction) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        res.status(400).json({ success:false, message: "Please provide email and password!" });
-        return;
+        const error:CustomError = new Error("Please provide email and password!");
+        error.statusCode = 400;
+        throw error;
     }
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(404).json({success:false, message: "User does not exist" });
-            return;
+            const error:CustomError = new Error("User does not exist");
+            error.statusCode = 404;
+            throw error;
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch){
-            res.status(400).json({ success:false,message: "Invalid credentials" });
-            return;
+            const error:CustomError = new Error("Invalid credentials");
+            error.statusCode = 400;
+            throw error;
         }
 
         const existingSessionId = req.cookies?.sessionId;
@@ -36,7 +40,7 @@ const handleLogin = async (req: Request, res: Response) => {
 
         res.status(200).json({success:true, data:{id:user._id}, message: "User logged in successfully!" });
     } catch (error) {
-        res.status(500).json({ success:false, message: (error as Error).message });
+        next(error);
     }
 }
 

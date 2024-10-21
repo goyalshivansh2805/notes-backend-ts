@@ -9,6 +9,8 @@ import verifyId from './middlewares/verifyID';
 import authRoute from './routes/auth';
 import notesRoute from './routes/notes';
 import promoteRoute from './routes/promote';
+import { CustomError } from './types/express';
+import errorHandler from './middlewares/errorHandler';
 
 dotenv.config();
 
@@ -27,9 +29,13 @@ app.use('/api/auth', authRoute);
 app.use('/api/notes', verifyId, notesRoute);
 app.use('/api/promote', verifyId, promoteRoute);
 
-app.use('*', (req: Request, res: Response) => {
-    res.status(404).json({ message: 'EndPoint not found!' });
+app.use('*', (req: Request, res: Response,next:NextFunction) => {
+    const error:CustomError = new Error(`Route not found - ${req.originalUrl}`);
+    error.statusCode = 404;
+    next(error);
 });
+
+app.use(errorHandler);
 
 mongoose.connection.on('open', () => {
     console.log('Connected to Database...');
