@@ -15,10 +15,23 @@ const PORT: number = Number(process.env.PORT) || 5000;
 
 connectToDB();
 
-app.use(cors({
-    origin:"*",
-    credentials: true, 
-}));
+const allowedOrigins = [
+    'http://localhost:3000', 
+];
+
+const corsOptions = {
+    origin: (origin : any, callback : any) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, origin); 
+        } else {
+            callback(new Error('CORS error: Origin not allowed')); 
+        }
+    },
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
