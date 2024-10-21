@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { getSession } from '../service/auth';
 import User from '../models/User';
+import CustomRequest from '../types/customRequest';
 
-const verifyId = async (req: Request, res: Response, next: NextFunction) => {
+const verifyId = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const sessionId = req.cookies?.sessionId;
     if (!sessionId) {
         res.status(401).json({success:false, message: "Unauthorized: No Session ID found" });

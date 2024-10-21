@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../../models/User'; 
-import CustomError from '../../utils/customError';
+import CustomError from '../../types/customError';
+import CustomRequest from '../../types/customRequest';
 
-const handlePromote = async (req: Request, res: Response,next:NextFunction) => {
+const handlePromote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     const userId = req.user?._id || null;
     if (!userId || !req.user || req.user.role !== "admin") {
         throw new CustomError("You are not authorized to promote a user!", 401);

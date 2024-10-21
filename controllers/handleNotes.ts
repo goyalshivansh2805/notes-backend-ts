@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import Note from '../models/Note'; 
-import CustomError from '../utils/customError';
+import CustomError from '../types/customError';
+import CustomRequest from '../types/customRequest';
 
-const getAllNotes = async (req: Request, res: Response,next:NextFunction) => {
+const getAllNotes = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {
         const userId = req.user?._id || null;
         if (!userId) {
@@ -28,7 +29,7 @@ const getAllNotes = async (req: Request, res: Response,next:NextFunction) => {
     }
 }
 
-const getNote = async (req: Request, res: Response,next:NextFunction) => {
+const getNote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {
         const userId = req.user?._id || null;
         if (!userId) {
@@ -47,7 +48,7 @@ const getNote = async (req: Request, res: Response,next:NextFunction) => {
     }
 }
 
-const createNote = async (req: Request, res: Response,next:NextFunction) => {
+const createNote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {
         if (!req.body.title || !req.body.content) {
             throw new CustomError("Please provide title and content of the note!", 400);
@@ -59,7 +60,7 @@ const createNote = async (req: Request, res: Response,next:NextFunction) => {
     }
 }
 
-const updateNote = async (req: Request, res: Response,next:NextFunction) => {
+const updateNote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {
         const note = await Note.findById(req.params.id);
         if (!note) {
@@ -75,7 +76,7 @@ const updateNote = async (req: Request, res: Response,next:NextFunction) => {
     }
 }
 
-const deleteNote = async (req: Request, res: Response,next:NextFunction) => {
+const deleteNote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {
         const note = await Note.findById(req.params.id);
         if (!note) {

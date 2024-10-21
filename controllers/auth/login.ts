@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import User from '../../models/User';
 import { v4 as uuidv4 } from 'uuid';
 import { createSession, getSession, deleteSession } from '../../service/auth';
-import CustomError from "../../utils/customError";
+import CustomError from "../../types/customError";
 
 const handleLogin = async (req: Request, res: Response,next:NextFunction) => {
     const { email, password } = req.body;

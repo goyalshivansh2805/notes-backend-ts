@@ -1,6 +1,6 @@
 import {Request,Response,NextFunction} from "express";
 import registerValidatorSchema from "../validators/register";
-import CustomError from "../utils/customError";
+import CustomError from "../types/customError";
 
 const validateRegister = (req:Request,res:Response,next:NextFunction) => {
     const {error} = registerValidatorSchema.validate(req.body,{abortEarly:false});
