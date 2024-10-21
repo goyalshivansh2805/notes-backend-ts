@@ -4,14 +4,14 @@ import {CustomError , CustomRequest} from '../../types';
 
 const handlePromote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     const userId = req.user?._id || null;
-    if (!userId || !req.user || req.user.role !== "admin") {
-        throw new CustomError("You are not authorized to promote a user!", 401);
-    }
-    const { email } = req.body;
-    if (!email) {
-        throw new CustomError("Please provide email of the user to promote!",400);
-    }
     try {
+        if (!userId || !req.user || req.user.role !== "admin") {
+            throw new CustomError("You are not authorized to promote a user!", 401);
+        }
+        const { email } = req.body;
+        if (!email) {
+            throw new CustomError("Please provide email of the user to promote!",400);
+        }
         const user = await User.findOne({ email });
         if (!user) {
             throw new CustomError("User not found!",404);
