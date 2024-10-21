@@ -15,7 +15,7 @@ const handleRegister = async (req: Request, res: Response,next:NextFunction): Pr
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ username, email, password: hashedPassword });
-        res.status(201).json({success:false, data:{id:user._id}, message: "User registered successfully!" });
+        res.status(201).json({success:true, data:{id:user._id}, message: "User registered successfully!" });
     } catch (error) {
         next(error);
     }
