@@ -1,12 +1,14 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Note from '../models/Note'; 
+import { CustomError } from '../types/express';
 
-const getAllNotes = async (req: Request, res: Response) => {
+const getAllNotes = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const userId = req.user?._id || null;
         if (!userId) {
-            res.status(401).json({success:false, message: "You are not authorized to view the notes!" });
-            return;
+            const error:CustomError = new Error("You are not authorized to view the notes!");
+            error.statusCode = 401;
+            throw error;
         }
         let notes;
         if (req.user?.role === "admin") {
@@ -20,83 +22,92 @@ const getAllNotes = async (req: Request, res: Response) => {
             notes = await Note.find({ user: userId });
         }
         if (!notes.length) {
-            res.status(404).json({success:false, message: "No notes found!" });
-            return;
+            const error:CustomError = new Error("No notes found!");
+            error.statusCode = 404;
+            throw error;
         }
         res.status(200).json({success:true, data:{notes}});
     } catch (error) {
-        res.status(500).json({success:false, message: (error as Error).message });
+        next(error);
     }
 }
 
-const getNote = async (req: Request, res: Response) => {
+const getNote = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const userId = req.user?._id || null;
         if (!userId) {
-            res.status(401).json({success:false, message: "You are not authorized to view the notes!" });
-            return;
+            const error:CustomError = new Error("You are not authorized to view the notes!");
+            error.statusCode = 401;
+            throw error;
         }
         const note = await Note.findById(req.params.id);
         if (!note) {
-            res.status(404).json({success:false, message: "Note not found!" });
-            return;
+            const error:CustomError = new Error("Note not found!");
+            error.statusCode = 404;
+            throw error;
         }
         if (note.user.toString() !== req.user?._id.toString() && req.user?.role !== "admin") {
-            res.status(401).json({success:false, message: "You are not authorized to view this note!" });
-            return;
+            const error:CustomError = new Error("You are not authorized to view this note!");
+            error.statusCode = 401;
+            throw error;
         }
         res.status(200).json({success:true, data:{note}});
     } catch (error) {
-        res.status(500).json({success:false, message: (error as Error).message });
+        next(error);
     }
 }
 
-const createNote = async (req: Request, res: Response) => {
+const createNote = async (req: Request, res: Response,next:NextFunction) => {
     try {
         if (!req.body.title || !req.body.content) {
-            res.status(400).json({success:false, message: "Please provide title and content!" });
-            return;
+            const error:CustomError = new Error("Please provide title and content!");
+            error.statusCode = 400;
+            throw error;
         }
         const note = await Note.create({ ...req.body, user: req.user?._id });
         res.status(201).json({success:true, data:{note}});
     } catch (error) {
-        res.status(500).json({success:false, message: (error as Error).message });
+       next(error);
     }
 }
 
-const updateNote = async (req: Request, res: Response) => {
+const updateNote = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const note = await Note.findById(req.params.id);
         if (!note) {
-            res.status(404).json({success:false, message: "Note not found!" });
-            return;
+            const error:CustomError = new Error("Note not found!");
+            error.statusCode = 404;
+            throw error;
         }
         if (note.user.toString() !== req.user?._id.toString() && req.user?.role !== "admin") {
-            res.status(401).json({success:false, message: "You are not authorized to update this note!" });
-            return;
+            const error:CustomError = new Error("You are not authorized to update this note!");
+            error.statusCode = 401;
+            throw error;
         }
         const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.status(200).json({success:true, data:{note:updatedNote}});
     } catch (error) {
-        res.status(500).json({success:false, message: (error as Error).message });
+        next(error);
     }
 }
 
-const deleteNote = async (req: Request, res: Response) => {
+const deleteNote = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const note = await Note.findById(req.params.id);
         if (!note) {
-            res.status(404).json({success:false, message: "Note not found!" });
-            return;
+            const error:CustomError = new Error("Note not found!");
+            error.statusCode = 404;
+            throw error;
         }
         if (note.user.toString() !== req.user?._id.toString() && req.user?.role !== "admin") {
-            res.status(401).json({success:false, message: "You are not authorized to delete this note!" });
-            return;
+            const error:CustomError = new Error("You are not authorized to delete this note!");
+            error.statusCode = 401;
+            throw error;
         }
         await Note.findByIdAndDelete(req.params.id);
         res.status(200).json({success:true, message: "Note deleted successfully!" });
     } catch (error) {
-        res.status(500).json({success:false, message: (error as Error).message });
+        next(error);
     }
 }
 

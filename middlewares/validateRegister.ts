@@ -1,11 +1,13 @@
 import {Request,Response,NextFunction} from "express";
 import registerValidatorSchema from "../validators/register";
+import { CustomError } from "../types/express";
 
 const validateRegister = (req:Request,res:Response,next:NextFunction) => {
     const {error} = registerValidatorSchema.validate(req.body,{abortEarly:false});
     if(error){
-        res.status(400).json({success:false,message:error.message});
-        return;
+        const err:CustomError = new Error(error.message);
+        err.statusCode = 400;
+        next(err);
     }
     next();
 }
