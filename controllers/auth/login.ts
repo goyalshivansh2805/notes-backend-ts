@@ -3,27 +3,21 @@ import bcrypt from 'bcrypt';
 import User from '../../models/User';
 import { v4 as uuidv4 } from 'uuid';
 import { createSession, getSession, deleteSession } from '../../service/auth';
-import { CustomError } from '../../types/express';
+import CustomError from "../../utils/customError";
 
 const handleLogin = async (req: Request, res: Response,next:NextFunction) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        const error:CustomError = new Error("Please provide email and password!");
-        error.statusCode = 400;
-        throw error;
+        throw new CustomError("Please provide all fields!", 400);
     }
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            const error:CustomError = new Error("User does not exist");
-            error.statusCode = 404;
-            throw error;
+            throw new CustomError("User does not exists!",404);
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch){
-            const error:CustomError = new Error("Invalid credentials");
-            error.statusCode = 400;
-            throw error;
+            throw new CustomError("Invalid credentials!",401);
         }
 
         const existingSessionId = req.cookies?.sessionId;

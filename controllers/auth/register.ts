@@ -1,21 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../../models/User';
 import bcrypt from 'bcrypt';
-import { CustomError } from '../../types/express';
+import CustomError from '../../utils/customError';
 
 const handleRegister = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
-        const error:CustomError = new Error("Please provide all fields!");
-        error.statusCode = 400;
-        throw error;
+        throw new CustomError("Please provide all fields!", 400);
     }
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            const error:CustomError = new Error("User already exists!");
-            error.statusCode = 400;
-            throw error;
+            throw new CustomError("User already exists!",400);
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ username, email, password: hashedPassword });

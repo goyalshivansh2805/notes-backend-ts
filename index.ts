@@ -9,7 +9,7 @@ import verifyId from './middlewares/verifyID';
 import authRoute from './routes/auth';
 import notesRoute from './routes/notes';
 import promoteRoute from './routes/promote';
-import { CustomError } from './types/express';
+import CustomError from './utils/customError';
 import errorHandler from './middlewares/errorHandler';
 
 dotenv.config();
@@ -30,8 +30,7 @@ app.use('/api/notes', verifyId, notesRoute);
 app.use('/api/promote', verifyId, promoteRoute);
 
 app.use('*', (req: Request, res: Response,next:NextFunction) => {
-    const error:CustomError = new Error(`Route not found - ${req.originalUrl}`);
-    error.statusCode = 404;
+    const error = new CustomError('Resource not found!', 404);
     next(error);
 });
 
