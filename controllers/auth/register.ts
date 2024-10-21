@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import User from '../../models/User';
+import {User} from "../../models"
 import bcrypt from 'bcrypt';
-import CustomError from '../../types/customError';
+import {CustomError} from '../../types';
 
 const handleRegister = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
     const { username, email, password } = req.body;

@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import User from '../../models/User'; 
-import CustomError from '../../types/customError';
-import CustomRequest from '../../types/customRequest';
+import {User} from "../../models"
+import {CustomError , CustomRequest} from '../../types';
 
 const handlePromote = async (req: CustomRequest, res: Response,next:NextFunction) => {
     const userId = req.user?._id || null;

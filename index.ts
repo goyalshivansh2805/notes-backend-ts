@@ -2,15 +2,11 @@ import dotenv from 'dotenv';
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import connectToDB from './config/connection';
-import logRequest from './middlewares/logRequests';
+import {connectToDB} from './config';
+import {logRequest , verifyID ,errorHandler} from './middlewares';
 import cookieParser from 'cookie-parser';
-import verifyId from './middlewares/verifyID';
-import authRoute from './routes/auth';
-import notesRoute from './routes/notes';
-import promoteRoute from './routes/promote';
-import CustomError from './types/customError';
-import errorHandler from './middlewares/errorHandler';
+import {authRoute,promoteRoute,notesRoute} from './routes';
+import {CustomError} from './types';
 
 dotenv.config();
 
@@ -26,8 +22,8 @@ app.use(cookieParser());
 app.use(logRequest);
 
 app.use('/api/auth', authRoute);
-app.use('/api/notes', verifyId, notesRoute);
-app.use('/api/promote', verifyId, promoteRoute);
+app.use('/api/notes', verifyID, notesRoute);
+app.use('/api/promote', verifyID, promoteRoute);
 
 app.use('*', (req: Request, res: Response,next:NextFunction) => {
     const error = new CustomError('Resource not found!', 404);

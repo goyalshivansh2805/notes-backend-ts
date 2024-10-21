@@ -1,12 +1,10 @@
 import express from 'express';
-import registerController from '../controllers/auth/register';
-import loginController from '../controllers/auth/login';
-import validateRegister from '../middlewares/validateRegister';
-import validateLogin from '../middlewares/validateLogin';
+import { handleRegister, handleLogin } from '../controllers';
+import {validateRegister, validateLogin} from '../middlewares';
 
 const router = express.Router();
 
-router.post('/register',validateRegister,registerController);
-router.post('/login',validateLogin, loginController);
+router.post('/register',validateRegister,handleRegister);
+router.post('/login',validateLogin, handleLogin);
 
 export default router;

@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import Note from '../models/Note'; 
-import CustomError from '../types/customError';
-import CustomRequest from '../types/customRequest';
+import {Note} from "../models"
+import {CustomError , CustomRequest} from '../types';
 
 const getAllNotes = async (req: CustomRequest, res: Response,next:NextFunction) => {
     try {

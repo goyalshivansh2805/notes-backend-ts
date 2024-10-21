@@ -1,9 +1,9 @@
 import { Request, Response ,NextFunction} from 'express';
 import bcrypt from 'bcrypt';
-import User from '../../models/User';
+import {User} from "../../models"
 import { v4 as uuidv4 } from 'uuid';
-import { createSession, getSession, deleteSession } from '../../service/auth';
-import CustomError from "../../types/customError";
+import { createSession, getSession, deleteSession } from '../../service';
+import {CustomError} from "../../types";
 
 const handleLogin = async (req: Request, res: Response,next:NextFunction) => {
     const { email, password } = req.body;

@@ -1,8 +1,8 @@
 import express from 'express';
-import promoteController from '../controllers/auth/promote';
+import {handlePromote} from '../controllers';
 
 const router = express.Router();
 
-router.post('/', promoteController);
+router.post('/', handlePromote);
 
 export default router;
