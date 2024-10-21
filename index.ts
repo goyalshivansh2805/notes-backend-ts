@@ -16,13 +16,7 @@ const PORT: number = Number(process.env.PORT) || 5000;
 connectToDB();
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (origin) {
-            callback(null, origin); 
-        } else {
-            callback(new Error('CORS error: Origin not allowed'));
-        }
-    },
+    origin:"*",
     credentials: true, 
 }));
 app.use(express.json());

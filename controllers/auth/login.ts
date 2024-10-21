@@ -30,7 +30,7 @@ const handleLogin = async (req: Request, res: Response,next:NextFunction) => {
 
         const sessionId = uuidv4();
         createSession(sessionId, user._id as string);
-        res.cookie("sessionId", sessionId, { httpOnly: true });
+        res.cookie("sessionId", sessionId, { httpOnly: true, sameSite: 'none' , path: '/' });
 
         res.status(200).json({success:true, data:{id:user._id,sessionId}, message: "User logged in successfully!" });
     } catch (error) {
