@@ -4,7 +4,7 @@ import User from '../models/User';
 import CustomRequest from '../types/customRequest';
 
 const verifyId = async (req: CustomRequest, res: Response, next: NextFunction) => {
-    console.log("verifyId middleware : Authorization Header", req.headers.authorization);
+    // console.log("verifyId middleware : Authorization Header", req.headers.authorization);
     
     const authHeader = req.headers.authorization;
     

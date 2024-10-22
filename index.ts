@@ -5,8 +5,9 @@ import cors from 'cors';
 import {connectToDB} from './config';
 import {logRequest , verifyID ,errorHandler} from './middlewares';
 import cookieParser from 'cookie-parser';
-import {authRoute,promoteRoute,notesRoute} from './routes';
+import {authRoute,promoteRoute,notesRoute,uploadRoute} from './routes';
 import {CustomError} from './types';
+import path  from 'path';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
-
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -33,6 +34,7 @@ app.use(logRequest);
 app.use('/api/auth', authRoute);
 app.use('/api/notes', verifyID, notesRoute);
 app.use('/api/promote', verifyID, promoteRoute);
+app.use('/api/upload', verifyID, uploadRoute);
 
 app.use('*', (req: Request, res: Response,next:NextFunction) => {
     const error = new CustomError('Resource not found!', 404);
